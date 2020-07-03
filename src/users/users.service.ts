@@ -7,7 +7,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto, UpdateUserDto, AssignRoleDto, UpdatePasswordDto } from './dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+  AssignRoleDto,
+  UpdatePasswordDto,
+} from './dto/user.dto';
 import { Role } from './entities/role.entity';
 import { updteUserDto } from './mocks/users.mocks';
 
@@ -76,7 +81,7 @@ class UsersService {
   }
 
   async findRoleByNameOrThrow(name: string) {
-    const role = await this.repoRole.findOne({where: {name:name}});
+    const role = await this.repoRole.findOne({ where: { name: name } });
     if (!role) throw new BadRequestException(`Role ${name} not found`);
     return role;
   }
@@ -102,7 +107,7 @@ class UsersService {
     const user = await this.getUserByIdOrThrow(id);
     const mergeUser = this.repoUsers.create({
       ...user,
-      ...data
+      ...data,
     });
     const updatedUser = await this.repoUsers.save(mergeUser);
     return updatedUser;
@@ -124,7 +129,8 @@ class UsersService {
     const user = await this.findOneByEmail(data.email);
     const role = await this.findRoleByNameOrThrow(data.name);
     const updatedUser = this.repoUsers.create({
-      ...user, role: role,
+      ...user,
+      role: role,
     });
     const result = await this.repoUsers.save(updatedUser);
     return result;
@@ -134,21 +140,23 @@ class UsersService {
     const user = await this.getUserByIdOrThrow(id);
     const completeUser = await this.findOneByEmail(user.email);
     const result = await completeUser.comparePassword(password.old);
-    if(!result) throw new BadRequestException('Invalid password');
-    const updatedUser = this.repoUsers.create({...completeUser,password: password.new});
+    if (!result) throw new BadRequestException('Invalid password');
+    const updatedUser = this.repoUsers.create({
+      ...completeUser,
+      password: password.new,
+    });
     await updatedUser.hashPassword();
     await this.repoUsers.save(updatedUser);
-    return 'Password changed successfully!'
+    return 'Password changed successfully!';
   }
 
-  async resetPassword(email: string, password: string){
+  async resetPassword(email: string, password: string) {
     const user = await this.findOneByEmail(email);
-    const updatedUser = this.repoUsers.create({...user,password: password});
+    const updatedUser = this.repoUsers.create({ ...user, password: password });
     await updatedUser.hashPassword();
     await this.repoUsers.save(updatedUser);
-    return 'Password successfully reset!'
+    return 'Password successfully reset!';
   }
-
 }
 
 export default UsersService;

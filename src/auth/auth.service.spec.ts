@@ -16,9 +16,9 @@ const mock_jwtService = {
   verify: jest.fn(),
 };
 
-const mock_appMailerService= {
+const mock_appMailerService = {
   resetPasswordMail: jest.fn(),
-}
+};
 
 const fakeUser = {
   comparePassword: jest.fn(),
@@ -75,8 +75,11 @@ describe('AuthService', () => {
         .mockImplementation(() => {
           return Promise.resolve(false);
         });
-      
-      const res = await service.validateUser('rigoomartinez@gmail.com', 'wrongPassword');
+
+      const res = await service.validateUser(
+        'rigoomartinez@gmail.com',
+        'wrongPassword',
+      );
       expect(res).toBe(null);
     });
   });
@@ -88,8 +91,10 @@ describe('AuthService', () => {
     it('should return {access_token: jwtToken}', async () => {
       const ImAToken = '$hklknhmlhKUG6D8.onhIGUKhnGKMhg';
       const userDto = userDTo1;
-      const spysign = jest.spyOn(jwtService,'sign').mockImplementation(()=>ImAToken);
-      const expected = {access_token: '$hklknhmlhKUG6D8.onhIGUKhnGKMhg'};
+      const spysign = jest
+        .spyOn(jwtService, 'sign')
+        .mockImplementation(() => ImAToken);
+      const expected = { access_token: '$hklknhmlhKUG6D8.onhIGUKhnGKMhg' };
       expect(await service.login(userDto)).toEqual(expected);
       expect(spysign).toHaveBeenCalled();
     });
@@ -102,12 +107,22 @@ describe('AuthService', () => {
     it('should return "mail sent"', async () => {
       //inputs
       const ImAToken = 'ey12345';
-      const email="rigoomartinez@gmail.com";
-      const user=user1;
+      const email = 'rigoomartinez@gmail.com';
+      const user = user1;
       //mocks implementations
-      const spyFBEmail = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
-      const spySign = jest.spyOn(jwtService,'sign').mockImplementation(()=>ImAToken);
-      const spyResetPswrd= jest.spyOn(appMailerService,'resetPasswordMail').mockImplementation(()=>{return 'mail sent'});
+      const spyFBEmail = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spySign = jest
+        .spyOn(jwtService, 'sign')
+        .mockImplementation(() => ImAToken);
+      const spyResetPswrd = jest
+        .spyOn(appMailerService, 'resetPasswordMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
       //outputs
       const expected = 'mail sent';
       //excecute
@@ -121,11 +136,21 @@ describe('AuthService', () => {
     it('should return "mail sent" even on invalid email', async () => {
       //inputs
       const ImAToken = 'ey12345';
-      const email="iamnotavalidemail@gmail.com";
-      const user=user1;
-      const spyFBEmail = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(undefined)});
-      const spySign = jest.spyOn(jwtService,'sign').mockImplementation(()=>ImAToken);
-      const spyResetPswrd= jest.spyOn(appMailerService,'resetPasswordMail').mockImplementation(()=>{return 'mail sent'});
+      const email = 'iamnotavalidemail@gmail.com';
+      const user = user1;
+      const spyFBEmail = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(undefined);
+        });
+      const spySign = jest
+        .spyOn(jwtService, 'sign')
+        .mockImplementation(() => ImAToken);
+      const spyResetPswrd = jest
+        .spyOn(appMailerService, 'resetPasswordMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
       //outputs
       const expected = 'mail sent';
       //excecute
@@ -138,8 +163,6 @@ describe('AuthService', () => {
     });
   });
 
-
-
   describe('verifyToken', () => {
     it('should be defined', () => {
       expect(service.verifyToken).toBeDefined();
@@ -147,18 +170,25 @@ describe('AuthService', () => {
     it('should return BadRequestException on invalid token', async () => {
       //inputs
       const keyword = 'ey12345';
-      const user=user1;
+      const user = user1;
       //mocks implementations
-      const spyVerify = jest.spyOn(jwtService,'verify').mockImplementation(()=> {return undefined as any});
+      const spyVerify = jest
+        .spyOn(jwtService, 'verify')
+        .mockImplementation(() => {
+          return undefined as any;
+        });
 
-      const spyFBEmail2 = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyFBEmail2 = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
       try {
         const res = await service.verifyToken(keyword, new Date('2020-07-02'));
-      }
-      catch(e){
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
         expect(spyVerify).toHaveBeenCalled();
@@ -168,19 +198,29 @@ describe('AuthService', () => {
     it('should return BadRequestException on invalid email', async () => {
       //inputs
       const keyword = 'ey12345';
-      const tokenInfo={payload:{email:'notvalidemail',code:2111},data:''};
-      const user=user1;
+      const tokenInfo = {
+        payload: { email: 'notvalidemail', code: 2111 },
+        data: '',
+      };
+      const user = user1;
       //mocks implementations
-      const spyVerify = jest.spyOn(jwtService,'verify').mockImplementation(()=> { return tokenInfo });
+      const spyVerify = jest
+        .spyOn(jwtService, 'verify')
+        .mockImplementation(() => {
+          return tokenInfo;
+        });
 
-      const spyFBEmail = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(undefined)});
+      const spyFBEmail = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(undefined);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
       try {
         const res = await service.verifyToken(keyword, new Date('2020-07-02'));
-      }
-      catch(e){
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
         expect(spyVerify).toHaveBeenCalled();
@@ -190,19 +230,29 @@ describe('AuthService', () => {
     it('should return BadRequestException on invalid code', async () => {
       //inputs
       const keyword = 'ey12345';
-      const tokenInfo={payload:{email:'notvalidemail',code:1111},data:''};
-      const user=user1;
+      const tokenInfo = {
+        payload: { email: 'notvalidemail', code: 1111 },
+        data: '',
+      };
+      const user = user1;
       //mocks implementations
-      const spyVerify = jest.spyOn(jwtService,'verify').mockImplementation(()=> { return tokenInfo });
+      const spyVerify = jest
+        .spyOn(jwtService, 'verify')
+        .mockImplementation(() => {
+          return tokenInfo;
+        });
 
-      const spyFBEmail = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyFBEmail = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
       try {
         const res = await service.verifyToken(keyword, new Date('2020-07-02'));
-      }
-      catch(e){
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
         expect(spyVerify).toHaveBeenCalled();
@@ -213,17 +263,31 @@ describe('AuthService', () => {
     it('should return a object with properties message and email ', async () => {
       //inputs
       const keyword = 'ey12345';
-      const tokenInfo={payload:{email:'notvalidemail',code:2030},data:''};
-      const user=user1;
+      const tokenInfo = {
+        payload: { email: 'notvalidemail', code: 2030 },
+        data: '',
+      };
+      const user = user1;
       //mocks implementations
-      const spyVerify = jest.spyOn(jwtService,'verify').mockImplementation(()=> { return tokenInfo });
+      const spyVerify = jest
+        .spyOn(jwtService, 'verify')
+        .mockImplementation(() => {
+          return tokenInfo;
+        });
 
-      const spyFBEmail = jest.spyOn(usersService,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyFBEmail = jest
+        .spyOn(usersService, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
-      const expected = {message: `Valid token, now you can send the new password!`, email: `rigoomartinez@gmail.com` }
+      const expected = {
+        message: `Valid token, now you can send the new password!`,
+        email: `rigoomartinez@gmail.com`,
+      };
       //excecute
       const res = await service.verifyToken(keyword, new Date('2020-07-02'));
-      
+
       //validation
       expect(res.message).toEqual(expected.message);
       expect(res.email).toEqual(expected.email);
@@ -231,5 +295,4 @@ describe('AuthService', () => {
       expect(spyFBEmail).toHaveBeenCalled();
     });
   });
-
 });

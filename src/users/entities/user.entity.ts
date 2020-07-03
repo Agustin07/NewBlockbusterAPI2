@@ -14,7 +14,6 @@ import { Role } from './role.entity';
 import { Rental } from '../../movies/entities/rental.entity';
 import { Purchase } from '../../movies/entities/purchase.entity';
 
-
 /* istanbul ignore file */
 
 @Entity()

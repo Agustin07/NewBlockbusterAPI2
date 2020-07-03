@@ -1,14 +1,27 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Movie } from './entities/movie.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateMovieDto, UpdateMovieDto, CreateTagDto, QueryMoviesDto } from './dto/movie.dto';
+import {
+  CreateMovieDto,
+  UpdateMovieDto,
+  CreateTagDto,
+  QueryMoviesDto,
+} from './dto/movie.dto';
 import { Tag } from './entities/tag.entity';
 import { RentalService } from './rental.service';
 import UsersService from '../users/users.service';
 
 import { PurchaseService } from './purchase.service';
-import { BuilderDirector, clientSearchQuery, SeachQuery } from './builder/search.builder';
+import {
+  BuilderDirector,
+  clientSearchQuery,
+  SeachQuery,
+} from './builder/search.builder';
 import { AppMailerService } from '../appmailer.service';
 
 @Injectable()
@@ -21,53 +34,67 @@ export class MoviesService {
     private rentalService: RentalService,
     private purchaseService: PurchaseService,
     private usersService: UsersService,
-    private readonly appmailerService: AppMailerService
+    private readonly appmailerService: AppMailerService,
   ) {}
 
-  async getMovies(query : QueryMoviesDto) {
-    const director = new BuilderDirector;
-    
-    const search : SeachQuery = clientSearchQuery(director,query);
-    
-    if (search.tags.length>0){
+  async getMovies(query: QueryMoviesDto) {
+    const director = new BuilderDirector();
+
+    const search: SeachQuery = clientSearchQuery(director, query);
+
+    if (search.tags.length > 0) {
       const movies = await this.repoMovies
-      .createQueryBuilder('movie')
-      .addSelect('movie.likes')
-      .where('movie.isActive = :isActive', { isActive: true })
-      .andWhere('movie.title like :title', { title: search.title })
-      .andWhere('movie.availability = :availability', { availability: search.availability })
-      .leftJoinAndSelect('movie.tags', 'tag')
-      .andWhere('tag.name IN (:...tags)', { tags: search.tags,})
-      .orderBy('movie.'+ search.sortedBy , search.sortedBy!=='title' ? 'DESC' : 'ASC' )
-      .getMany();
+        .createQueryBuilder('movie')
+        .addSelect('movie.likes')
+        .addSelect('movie.price')
+        .addSelect('movie.availability')
+        .addSelect('movie.stock')
+        .where('movie.isActive = :isActive', { isActive: true })
+        .andWhere('movie.title like :title', { title: search.title })
+        .andWhere('movie.availability = :availability', {
+          availability: search.availability,
+        })
+        .leftJoinAndSelect('movie.tags', 'tag')
+        .andWhere('tag.name IN (:...tags)', { tags: search.tags })
+        .orderBy(
+          'movie.' + search.sortedBy,
+          search.sortedBy !== 'title' ? 'DESC' : 'ASC',
+        )
+        .getMany();
       return movies;
-    }
-    else {
+    } else {
       const movies = await this.repoMovies
-      .createQueryBuilder('movie')
-      .addSelect('movie.likes')
-      .where('movie.isActive = :isActive', { isActive: true })
-      .andWhere('movie.title like :title', { title: search.title })
-      .andWhere('movie.availability = :availability', { availability: search.availability })
-      .leftJoinAndSelect('movie.tags', 'tag')
-      .orderBy('movie.'+ search.sortedBy , search.sortedBy!=='title' ? 'DESC' : 'ASC' )
-      .getMany();
+        .createQueryBuilder('movie')
+        .addSelect('movie.likes')
+        .addSelect('movie.price')
+        .addSelect('movie.availability')
+        .addSelect('movie.stock')
+        .where('movie.isActive = :isActive', { isActive: true })
+        .andWhere('movie.title like :title', { title: search.title })
+        .andWhere('movie.availability = :availability', {
+          availability: search.availability,
+        })
+        .leftJoinAndSelect('movie.tags', 'tag')
+        .orderBy(
+          'movie.' + search.sortedBy,
+          search.sortedBy !== 'title' ? 'DESC' : 'ASC',
+        )
+        .getMany();
       return movies;
     }
   }
 
   async findOneById(id: number) {
     return await this.repoMovies
-    .createQueryBuilder('movie')
-    .addSelect('movie.stock')
-    .addSelect('movie.availability')
-    .addSelect('movie.price')
-    .leftJoinAndSelect('movie.tags', 'tag')
-    .where('movie.isActive = :isActive', { isActive: true })
-    .andWhere('movie.id = :id', { id: id })
-    .getOne();
+      .createQueryBuilder('movie')
+      .addSelect('movie.stock')
+      .addSelect('movie.availability')
+      .addSelect('movie.price')
+      .leftJoinAndSelect('movie.tags', 'tag')
+      .where('movie.isActive = :isActive', { isActive: true })
+      .andWhere('movie.id = :id', { id: id })
+      .getOne();
   }
-
 
   async findOneByIdOrThrow(id: number) {
     const movie = await this.findOneById(id);
@@ -142,7 +169,8 @@ export class MoviesService {
   }
 
   takeOne(movie: Movie) {
-    if (movie.stock === 0) throw new NotFoundException(`Sorry, movie ${movie.title} sold out.`);
+    if (movie.stock === 0)
+      throw new NotFoundException(`Sorry, movie ${movie.title} sold out.`);
     if (movie.availability === false)
       throw new NotFoundException(`Sorry, movie ${movie.title} not available.`);
     movie.stock--;
@@ -165,42 +193,51 @@ export class MoviesService {
   }
 
   async getListOfMovies(ids: number | number[]) {
-    if(!Array.isArray(ids)) return this.takeOne(await this.findOneByIdOrThrow(ids));
-    const moviesList = Promise.all(ids.map( async (id) =>{
-      let movie = await this.findOneByIdOrThrow(id);
-      return this.takeOne(movie); 
-    }))
-    .then((result)=>{return result});
+    if (!Array.isArray(ids))
+      return this.takeOne(await this.findOneByIdOrThrow(ids));
+    const moviesList = Promise.all(
+      ids.map(async (id) => {
+        let movie = await this.findOneByIdOrThrow(id);
+        return this.takeOne(movie);
+      }),
+    ).then((result) => {
+      return result;
+    });
     return moviesList;
   }
 
   async updateOneOrMore(movies: Movie | Movie[]) {
-    if(!Array.isArray(movies)) return await this.repoMovies.save(movies);
-    const updatedMovies = Promise.all(movies.map(async (movie)=>{
-      return await this.repoMovies.save(movie);
-    })).then(result => { return result });
-    
+    if (!Array.isArray(movies)) return await this.repoMovies.save(movies);
+    const updatedMovies = Promise.all(
+      movies.map(async (movie) => {
+        return await this.repoMovies.save(movie);
+      }),
+    ).then((result) => {
+      return result;
+    });
+
     return updatedMovies;
   }
 
-  async rentMovies(list: number| number[], userId: number) {
+  async rentMovies(list: number | number[], userId: number) {
     const moviesList = await this.getListOfMovies(list);
     const user = await this.usersService.getUserByIdOrThrow(userId);
-    if (! await this.rentalService.createRent(moviesList, user)) throw new BadRequestException('Could not create rentals');
+    if (!(await this.rentalService.createRent(moviesList, user)))
+      throw new BadRequestException('Could not create rentals');
 
     const rentedMovies = await this.updateOneOrMore(moviesList);
-    this.appmailerService.rentMail(user,rentedMovies);
+    this.appmailerService.rentMail(user, rentedMovies);
     return rentedMovies;
   }
 
-
-  async buyMovies(list: number| number[], userId: number) {
+  async buyMovies(list: number | number[], userId: number) {
     const moviesList = await this.getListOfMovies(list);
     const user = await this.usersService.getUserByIdOrThrow(userId);
-    if (! await this.purchaseService.createPurchase(moviesList, user)) throw new BadRequestException('Could not create purchases');
+    if (!(await this.purchaseService.createPurchase(moviesList, user)))
+      throw new BadRequestException('Could not create purchases');
 
     const purchasedMovies = await this.updateOneOrMore(moviesList);
-    this.appmailerService.purchaseMail(user,purchasedMovies);
+    this.appmailerService.purchaseMail(user, purchasedMovies);
     return purchasedMovies;
   }
 

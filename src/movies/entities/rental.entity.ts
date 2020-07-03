@@ -18,10 +18,10 @@ export class Rental {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn({ type: 'timestamp', select: false})
+  @CreateDateColumn({ type: 'timestamp', select: false })
   createdAt: Date;
 
-  @Column({default: false})
+  @Column({ default: false })
   returned: boolean;
 
   @ManyToOne((type) => User, (user) => user.rentals)

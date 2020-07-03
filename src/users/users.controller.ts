@@ -86,7 +86,6 @@ export class UsersController {
     return response;
   }
 
-
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Role('CLIENT')
   @Put(':id/changePassword')

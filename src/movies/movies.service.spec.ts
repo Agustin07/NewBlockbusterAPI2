@@ -24,11 +24,10 @@ import { PurchaseService } from './purchase.service';
 import { PurchaseServiceFake } from './mocks/purchase.service.mocks';
 import { AppMailerService } from '../appmailer.service';
 
-const mock_appMailerService= {
+const mock_appMailerService = {
   purchaseMail: jest.fn(),
   rentMail: jest.fn(),
-}
-
+};
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -310,7 +309,6 @@ describe('MoviesService', () => {
     });
   });
 
-
   describe('takeOne', () => {
     it('takeOne should be defined', () => {
       expect(service.takeOne).toBeDefined();
@@ -319,20 +317,20 @@ describe('MoviesService', () => {
       //inputs
       const movie = movie1;
       //mocks implementations
-     //outputs
-     const expected = {stock:4, availability: true};
-     //excecute
-     const res = service.takeOne(movie);
-     //validation
-     expect(res.stock).toEqual(expected.stock);
-     expect(res.availability).toEqual(expected.availability);
+      //outputs
+      const expected = { stock: 4, availability: true };
+      //excecute
+      const res = service.takeOne(movie);
+      //validation
+      expect(res.stock).toEqual(expected.stock);
+      expect(res.availability).toEqual(expected.availability);
     });
     it('should returns movie1 with {stock:0, availability: false}', async () => {
       //inputs
       const movie = movie2;
       //mocks implementations
       //outputs
-      const expected = {stock:0, availability: false};
+      const expected = { stock: 0, availability: false };
       //excecute
       const res = service.takeOne(movie);
       //validation
@@ -348,11 +346,10 @@ describe('MoviesService', () => {
       //excecute
       try {
         const res = service.takeOne(movie);
-      }
-      catch (e) {
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
-        expect(e).toEqual(Error(`Sorry, movie ${movie.title} not available.`))
+        expect(e).toEqual(Error(`Sorry, movie ${movie.title} not available.`));
       }
     });
     it('should throw NotFoundException because movie4 {sotck = 0}', async () => {
@@ -364,15 +361,13 @@ describe('MoviesService', () => {
       //excecute
       try {
         const res = service.takeOne(movie);
-      }
-      catch (e) {
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
-        expect(e).toEqual(Error(`Sorry, movie ${movie.title} sold out.`))
+        expect(e).toEqual(Error(`Sorry, movie ${movie.title} sold out.`));
       }
     });
   });
-
 
   describe('returnOne', () => {
     it('returnOne should be defined', () => {
@@ -380,10 +375,10 @@ describe('MoviesService', () => {
     });
     it('should return movie1 with { stock: 5,availability: true}', () => {
       //inputs
-      const movie= movie1;
+      const movie = movie1;
       //mocks implementations
       //outputs
-      const expected = {stock:5, availability: true};
+      const expected = { stock: 5, availability: true };
       //excecute
       const res = service.returnOne(movie);
       //validation
@@ -392,10 +387,10 @@ describe('MoviesService', () => {
     });
     it('should return movie4 with stock: 1, availability: true ', () => {
       //inputs
-      const movie= movie4;
+      const movie = movie4;
       //mocks implementations
       //outputs
-      const expected = {stock:1, availability: true};
+      const expected = { stock: 1, availability: true };
       //excecute
       const res = service.returnOne(movie);
       //validation
@@ -403,7 +398,6 @@ describe('MoviesService', () => {
       expect(res.availability).toEqual(expected.availability);
     });
   });
-
 
   describe('returnMovie', () => {
     it('returnMovie should be defined', () => {
@@ -421,9 +415,19 @@ describe('MoviesService', () => {
         createdAt: new Date('2020-06.25'),
       };
       //mocks implementations
-      const spyfindRentalOrThrow = jest.spyOn(rentalService,'findRentalOrThrow').mockImplementation(()=>{return Promise.resolve(rental)});
-      const spySave = jest.spyOn(repoMovies,'save').mockImplementation(()=>{return Promise.resolve(rental.movie)});
-      const spyUpdateReturned = jest.spyOn(rentalService,'updateReturned').mockImplementation(()=>{return Promise.resolve(rental)});
+      const spyfindRentalOrThrow = jest
+        .spyOn(rentalService, 'findRentalOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(rental);
+        });
+      const spySave = jest.spyOn(repoMovies, 'save').mockImplementation(() => {
+        return Promise.resolve(rental.movie);
+      });
+      const spyUpdateReturned = jest
+        .spyOn(rentalService, 'updateReturned')
+        .mockImplementation(() => {
+          return Promise.resolve(rental);
+        });
       //outputs
       const expected = `"${rental.movie.title}" have been returned!`;
       //excecute
@@ -432,8 +436,6 @@ describe('MoviesService', () => {
       expect(res).toEqual(expected);
     });
   });
-
-
 
   describe('getListOfMovies', () => {
     it('getListOfMovies should be defined', () => {
@@ -444,7 +446,11 @@ describe('MoviesService', () => {
       const ids = 1;
       const movies = movie1;
       //mocks implementations
-      const spyfindOneByIdOrThrow = jest.spyOn(service,'findOneByIdOrThrow').mockImplementation(()=>{return Promise.resolve(movies)});
+      const spyfindOneByIdOrThrow = jest
+        .spyOn(service, 'findOneByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -455,19 +461,22 @@ describe('MoviesService', () => {
 
     it('On array of ids, should return array of movie', async () => {
       //inputs
-      const ids = [1,2];
-      const movies = [movie1,movie2];
+      const ids = [1, 2];
+      const movies = [movie1, movie2];
       //mocks implementations
-      const spyfindOneByIdOrThrow = jest.spyOn(service,'findOneByIdOrThrow').mockImplementation(()=>{return Promise.resolve(movie1)});
+      const spyfindOneByIdOrThrow = jest
+        .spyOn(service, 'findOneByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(movie1);
+        });
       //outputs
-      const expected = [movie1,movie1];
+      const expected = [movie1, movie1];
       //excecute
       const res = await service.getListOfMovies(ids);
       //validation
       expect(res).toEqual(expected);
     });
   });
-
 
   describe('rentMovies', () => {
     it('rentMovies should be defined', () => {
@@ -480,12 +489,32 @@ describe('MoviesService', () => {
       const movies = movie1;
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreateRent = jest.spyOn(rentalService,'createRent').mockImplementation(()=>{return Promise.resolve(true)})
-      const spyupdateOneOrMore = jest.spyOn(service,'updateOneOrMore').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spyrentMail =jest.spyOn(appMailerService,'rentMail').mockImplementation(()=>{return 'mail sent'});
-      
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreateRent = jest
+        .spyOn(rentalService, 'createRent')
+        .mockImplementation(() => {
+          return Promise.resolve(true);
+        });
+      const spyupdateOneOrMore = jest
+        .spyOn(service, 'updateOneOrMore')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spyrentMail = jest
+        .spyOn(appMailerService, 'rentMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
+
       //outputs
       const expected = movies;
       //excecute
@@ -501,16 +530,36 @@ describe('MoviesService', () => {
 
     it('On array of ids, should return array of movie', async () => {
       //inputs
-      const list = [1,2];
+      const list = [1, 2];
       const userId = user1.id;
-      const movies = [movie1,movie2];
+      const movies = [movie1, movie2];
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreateRent = jest.spyOn(rentalService,'createRent').mockImplementation(()=>{return Promise.resolve(true)})
-      const spyupdateOneOrMore = jest.spyOn(service,'updateOneOrMore').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spyrentMail =jest.spyOn(appMailerService,'rentMail').mockImplementation(()=>{return 'mail sent'});
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreateRent = jest
+        .spyOn(rentalService, 'createRent')
+        .mockImplementation(() => {
+          return Promise.resolve(true);
+        });
+      const spyupdateOneOrMore = jest
+        .spyOn(service, 'updateOneOrMore')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spyrentMail = jest
+        .spyOn(appMailerService, 'rentMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -526,14 +575,26 @@ describe('MoviesService', () => {
 
     it('should throw BadRequestException', async () => {
       //inputs
-      const list = [1,2];
+      const list = [1, 2];
       const userId = user1.id;
-      const movies = [movie1,movie2];
+      const movies = [movie1, movie2];
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreateRent = jest.spyOn(rentalService,'createRent').mockImplementation(()=>{return Promise.resolve(false)})
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreateRent = jest
+        .spyOn(rentalService, 'createRent')
+        .mockImplementation(() => {
+          return Promise.resolve(false);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
@@ -547,7 +608,6 @@ describe('MoviesService', () => {
     });
   });
 
-
   describe('buyMovies', () => {
     it('buyMovies should be defined', () => {
       expect(service.buyMovies).toBeDefined();
@@ -559,12 +619,32 @@ describe('MoviesService', () => {
       const movies = movie1;
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreatePurchase = jest.spyOn(purchaseService,'createPurchase').mockImplementation(()=>{return Promise.resolve(true)})
-      const spyupdateOneOrMore = jest.spyOn(service,'updateOneOrMore').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spypurchaseMail =jest.spyOn(appMailerService,'purchaseMail').mockImplementation(()=>{return 'mail sent'});
-      
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreatePurchase = jest
+        .spyOn(purchaseService, 'createPurchase')
+        .mockImplementation(() => {
+          return Promise.resolve(true);
+        });
+      const spyupdateOneOrMore = jest
+        .spyOn(service, 'updateOneOrMore')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spypurchaseMail = jest
+        .spyOn(appMailerService, 'purchaseMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
+
       //outputs
       const expected = movies;
       //excecute
@@ -580,16 +660,36 @@ describe('MoviesService', () => {
 
     it('On array of ids, should return array of movie', async () => {
       //inputs
-      const list = [1,2];
+      const list = [1, 2];
       const userId = user1.id;
-      const movies = [movie1,movie2];
+      const movies = [movie1, movie2];
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreatePurchase = jest.spyOn(purchaseService,'createPurchase').mockImplementation(()=>{return Promise.resolve(true)})
-      const spyupdateOneOrMore = jest.spyOn(service,'updateOneOrMore').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spypurchaseMail =jest.spyOn(appMailerService,'purchaseMail').mockImplementation(()=>{return 'mail sent'});
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreatePurchase = jest
+        .spyOn(purchaseService, 'createPurchase')
+        .mockImplementation(() => {
+          return Promise.resolve(true);
+        });
+      const spyupdateOneOrMore = jest
+        .spyOn(service, 'updateOneOrMore')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spypurchaseMail = jest
+        .spyOn(appMailerService, 'purchaseMail')
+        .mockImplementation(() => {
+          return 'mail sent';
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -603,17 +703,28 @@ describe('MoviesService', () => {
       expect(spypurchaseMail).toHaveBeenCalled();
     });
 
-
     it('should throw BadRequestException', async () => {
       //inputs
-      const list = [1,2];
+      const list = [1, 2];
       const userId = user1.id;
-      const movies = [movie1,movie2];
+      const movies = [movie1, movie2];
       const user = user1;
       //mocks implementations
-      const spygetListOfMovies = jest.spyOn(service,'getListOfMovies').mockImplementation(()=>{return Promise.resolve(movies)});
-      const spygetUser = jest.spyOn(usersService,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyCreatePurchase = jest.spyOn(purchaseService,'createPurchase').mockImplementation(()=>{return Promise.resolve(false)})
+      const spygetListOfMovies = jest
+        .spyOn(service, 'getListOfMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
+      const spygetUser = jest
+        .spyOn(usersService, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyCreatePurchase = jest
+        .spyOn(purchaseService, 'createPurchase')
+        .mockImplementation(() => {
+          return Promise.resolve(false);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
@@ -625,7 +736,5 @@ describe('MoviesService', () => {
         expect(e).toEqual(Error('Could not create purchases'));
       }
     });
-    
   });
-
 });

@@ -15,7 +15,6 @@ import { Tag } from './tag.entity';
 import { Rental } from './rental.entity';
 import { Purchase } from './purchase.entity';
 
-
 /* istanbul ignore file */
 
 @Entity()
@@ -32,7 +31,7 @@ export class Movie {
   @Column()
   poster: string;
 
-  @Column({select: false})
+  @Column({ select: false })
   stock: number;
 
   @Column()
@@ -50,13 +49,13 @@ export class Movie {
   @Column({ default: true, select: false })
   isActive: boolean;
 
-  @CreateDateColumn({ type: 'timestamp', select: false})
+  @CreateDateColumn({ type: 'timestamp', select: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', select: false})
+  @UpdateDateColumn({ type: 'timestamp', select: false })
   updatedAt: Date;
 
-  @DeleteDateColumn({ type: 'timestamp', select: false})
+  @DeleteDateColumn({ type: 'timestamp', select: false })
   deletedAt: Date;
 
   @ManyToMany((type) => Tag)

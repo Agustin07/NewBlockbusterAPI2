@@ -76,7 +76,6 @@ export const movie3: Movie = {
   purchases: [],
 };
 
-
 export const movie4: Movie = {
   id: 4,
   title: '22 Jump Street',

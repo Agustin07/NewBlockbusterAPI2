@@ -16,9 +16,9 @@ import { AppMailerService } from '../appmailer.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Role, Rental, Movie, Tag, Purchase]),
-    UsersModule
+    UsersModule,
   ],
   controllers: [MoviesController],
-  providers: [MoviesService, RentalService, PurchaseService,AppMailerService],
+  providers: [MoviesService, RentalService, PurchaseService, AppMailerService],
 })
 export class MoviesModule {}

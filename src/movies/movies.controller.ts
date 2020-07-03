@@ -31,9 +31,7 @@ export class MoviesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Role('CLIENT')
   @Get('rented')
-  async getRentedMovies(
-    @User() user: AuthedUserDto,
-  ) {
+  async getRentedMovies(@User() user: AuthedUserDto) {
     const rentedMovies = await this.moviesService.getRentedMovies(user.id);
     return rentedMovies;
   }
@@ -41,10 +39,10 @@ export class MoviesController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Role('CLIENT')
   @Get('bought')
-  async getPurchasedMovies(
-    @User() user: AuthedUserDto,
-  ) {
-    const purchasedMovies = await this.moviesService.getPurchasedMovies(user.id);
+  async getPurchasedMovies(@User() user: AuthedUserDto) {
+    const purchasedMovies = await this.moviesService.getPurchasedMovies(
+      user.id,
+    );
     return purchasedMovies;
   }
 
@@ -128,6 +126,4 @@ export class MoviesController {
     const purchasedMovies = await this.moviesService.buyMovies(list, user.id);
     return purchasedMovies;
   }
-
-
 }

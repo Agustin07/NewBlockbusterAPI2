@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-
 /* istanbul ignore file */
 
 @Entity()

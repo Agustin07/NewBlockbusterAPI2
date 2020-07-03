@@ -22,9 +22,9 @@ export const MoviesServiceFake = {
   getListOfMovies: jest.fn(),
   updateOneOrMore: jest.fn(),
   rentMovies: jest.fn(),
-  buyMovies:jest.fn(),
-  getRentedMovies:jest.fn(),
-  getPurchasedMovies:jest.fn(),
+  buyMovies: jest.fn(),
+  getRentedMovies: jest.fn(),
+  getPurchasedMovies: jest.fn(),
 };
 /*    
 

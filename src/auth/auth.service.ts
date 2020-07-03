@@ -33,23 +33,33 @@ export class AuthService {
 
   async resetPassword(email: string) {
     const user = await this.usersService.findByEmail(email);
-    const id = ( user ? user.id : 0);
+    const id = user ? user.id : 0;
     const today = new Date();
-    const payload = { email: email, code: today.getFullYear()+(today.getMonth()+1)+today.getDate()+id}
+    const payload = {
+      email: email,
+      code: today.getFullYear() + (today.getMonth() + 1) + today.getDate() + id,
+    };
     const keyword = this.jwtService.sign(payload);
-    const response = await this.appMailerService.resetPasswordMail(keyword,email);
+    const response = await this.appMailerService.resetPasswordMail(
+      keyword,
+      email,
+    );
     return response;
   }
 
-  async verifyToken(keyword: string, today : Date){
-    const result = this.jwtService.verify(keyword,{complete:true});
+  async verifyToken(keyword: string, today: Date) {
+    const result = this.jwtService.verify(keyword, { complete: true });
     if (!result) throw new BadRequestException('Invalid token');
-    const {payload,...data} = result;
+    const { payload, ...data } = result;
     const user = await this.usersService.findByEmail(payload.email);
     if (!user) throw new BadRequestException('Invalid token');
-    const validCode: number = today.getFullYear()+(today.getMonth()+1)+today.getDate()+user.id;
-    if (payload.code !== validCode) throw new BadRequestException('Invalid tolen');
-    return {message: `Valid token, now you can send the new password!`, email: user.email };
+    const validCode: number =
+      today.getFullYear() + (today.getMonth() + 1) + today.getDate() + user.id;
+    if (payload.code !== validCode)
+      throw new BadRequestException('Invalid tolen');
+    return {
+      message: `Valid token, now you can send the new password!`,
+      email: user.email,
+    };
   }
-
 }

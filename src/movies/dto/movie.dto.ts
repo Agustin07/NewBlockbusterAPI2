@@ -8,7 +8,6 @@ import {
   IsOptional,
 } from 'class-validator';
 
-
 export class CreateMovieDto {
   @IsNotEmpty()
   @IsString()
@@ -75,7 +74,6 @@ export class CreateTagDto {
   name: string;
 }
 
-
 export class QueryMoviesDto {
   @IsOptional()
   @IsString()
@@ -97,5 +95,4 @@ export class QueryMoviesDto {
   @IsNotEmpty()
   @IsString()
   tags: string;
-
 }

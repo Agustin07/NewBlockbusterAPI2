@@ -17,7 +17,7 @@ import { AppMailerService } from '../appmailer.service';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy,AppMailerService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, AppMailerService],
   exports: [AuthService],
 })
 export class AuthModule {}

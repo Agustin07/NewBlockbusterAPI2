@@ -11,7 +11,11 @@ import {
   updteUserDto,
   roleAdmin,
 } from './mocks/users.mocks';
-import { ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { AssignRoleDto, UpdatePasswordDto } from './dto/user.dto';
 
 describe('UsersService', () => {
@@ -164,14 +168,17 @@ describe('UsersService', () => {
     });
   });
 
-
   describe('findOneByEmail', () => {
     it('should return message ', async () => {
       //inputs
       const email = 'rigoomartinez@gmail.com';
       const user = user1;
       //mocks implementations
-      const spyFindByEmail = jest.spyOn(service,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyFindByEmail = jest
+        .spyOn(service, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
       const expected = user;
       //excecute
@@ -186,14 +193,18 @@ describe('UsersService', () => {
       const email = 'rigoomartinez@gmail.com';
       const user = undefined;
       //mocks implementations
-      const spyFindByEmail = jest.spyOn(service,'findByEmail').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyFindByEmail = jest
+        .spyOn(service, 'findByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
       const expected = NotFoundException;
       //excecute
       try {
         const res = await service.findOneByEmail(email);
       } catch (e) {
-         //validation
+        //validation
         expect(e).toBeInstanceOf(expected);
       }
     });
@@ -205,7 +216,11 @@ describe('UsersService', () => {
       const name = 'CLIENT';
       const role = roleClient;
       //mocks implementations
-      const spyfindOne = jest.spyOn(repoRole,'findOne').mockImplementation(()=>{return Promise.resolve(role)});
+      const spyfindOne = jest
+        .spyOn(repoRole, 'findOne')
+        .mockImplementation(() => {
+          return Promise.resolve(role);
+        });
       //outputs
       const expected = roleClient;
       //excecute
@@ -220,31 +235,49 @@ describe('UsersService', () => {
       const name = 'CLIENT';
       const role = undefined;
       //mocks implementations
-      const spyfindOne = jest.spyOn(repoRole,'findOne').mockImplementation(()=>{return Promise.resolve(role)});
+      const spyfindOne = jest
+        .spyOn(repoRole, 'findOne')
+        .mockImplementation(() => {
+          return Promise.resolve(role);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
       try {
         const res = await service.findRoleByNameOrThrow(name);
-      } catch(e) {
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
       }
     });
   });
 
-
   describe('assignRole', () => {
     it('should return User ', async () => {
       //inputs
-      const data: AssignRoleDto = {email:'rigoomartinez@gmail.com', name:'ADMIN'};
+      const data: AssignRoleDto = {
+        email: 'rigoomartinez@gmail.com',
+        name: 'ADMIN',
+      };
       const user = user1;
       const role = roleAdmin;
       //mocks implementations
-      const spy1 = jest.spyOn(service,'findOneByEmail').mockImplementation(()=>{return Promise.resolve(user)});
-      const spy2 = jest.spyOn(service,'findRoleByNameOrThrow').mockImplementation(()=>{return Promise.resolve(role)});
-      const spy3 = jest.spyOn(repoUser,'create').mockImplementation(()=>{return user});
-      const spy4 = jest.spyOn(repoUser,'save').mockImplementation(()=>{return Promise.resolve(user)});
+      const spy1 = jest
+        .spyOn(service, 'findOneByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spy2 = jest
+        .spyOn(service, 'findRoleByNameOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(role);
+        });
+      const spy3 = jest.spyOn(repoUser, 'create').mockImplementation(() => {
+        return user;
+      });
+      const spy4 = jest.spyOn(repoUser, 'save').mockImplementation(() => {
+        return Promise.resolve(user);
+      });
       //outputs
       const expected = user;
       //excecute
@@ -262,15 +295,40 @@ describe('UsersService', () => {
     it('should return a message', async () => {
       //inputs
       const id = 1;
-      const password : UpdatePasswordDto = {old:'oldPassword', new:'newPassword'};
+      const password: UpdatePasswordDto = {
+        old: 'oldPassword',
+        new: 'newPassword',
+      };
       const user = user1;
       //mocks implementations
-      const spygetUserByIdOrThrow = jest.spyOn(service,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-      const spyfindOneByEmail = jest.spyOn(service,'findOneByEmail').mockImplementation(()=>{return Promise.resolve(user)});
-      const spycompare = jest.spyOn(user,'comparePassword').mockImplementation(()=>{return Promise.resolve(true)});
-      const spycreate = jest.spyOn(repoUser,'create').mockImplementation(()=>{return user});
-      const spyhash = jest.spyOn(user,'hashPassword').mockImplementation(()=>{return Promise.resolve()});
-      const spysave = jest.spyOn(repoUser,'save').mockImplementation(()=>{return Promise.resolve(user)});
+      const spygetUserByIdOrThrow = jest
+        .spyOn(service, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyfindOneByEmail = jest
+        .spyOn(service, 'findOneByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spycompare = jest
+        .spyOn(user, 'comparePassword')
+        .mockImplementation(() => {
+          return Promise.resolve(true);
+        });
+      const spycreate = jest
+        .spyOn(repoUser, 'create')
+        .mockImplementation(() => {
+          return user;
+        });
+      const spyhash = jest
+        .spyOn(user, 'hashPassword')
+        .mockImplementation(() => {
+          return Promise.resolve();
+        });
+      const spysave = jest.spyOn(repoUser, 'save').mockImplementation(() => {
+        return Promise.resolve(user);
+      });
       //outputs
       const expected = 'Password changed successfully!';
       //excecute
@@ -286,26 +344,40 @@ describe('UsersService', () => {
     });
 
     it('should throw BadRequestException ', async () => {
-       //inputs
-       const id = 1;
-       const password : UpdatePasswordDto = {old:'oldPassword', new:'newPassword'};
-       const user = user1;
-       //mocks implementations
-       const spygetUserByIdOrThrow = jest.spyOn(service,'getUserByIdOrThrow').mockImplementation(()=>{return Promise.resolve(user)});
-       const spyfindOneByEmail = jest.spyOn(service,'findOneByEmail').mockImplementation(()=>{return Promise.resolve(user)});
-       const spycompare = jest.spyOn(user,'comparePassword').mockImplementation(()=>{return Promise.resolve(false)});
+      //inputs
+      const id = 1;
+      const password: UpdatePasswordDto = {
+        old: 'oldPassword',
+        new: 'newPassword',
+      };
+      const user = user1;
+      //mocks implementations
+      const spygetUserByIdOrThrow = jest
+        .spyOn(service, 'getUserByIdOrThrow')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spyfindOneByEmail = jest
+        .spyOn(service, 'findOneByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spycompare = jest
+        .spyOn(user, 'comparePassword')
+        .mockImplementation(() => {
+          return Promise.resolve(false);
+        });
       //outputs
       const expected = BadRequestException;
       //excecute
       try {
         const res = await service.changePassword(id, password);
-      } catch(e) {
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
       }
     });
   });
-
 
   describe('resetPassword', () => {
     it('should return a message', async () => {
@@ -314,10 +386,24 @@ describe('UsersService', () => {
       const password = 'charmeleon';
       const user = user1;
       //mocks implementations
-      const spyfindOneByEmail = jest.spyOn(service,'findOneByEmail').mockImplementation(()=>{return Promise.resolve(user)});
-      const spycreate = jest.spyOn(repoUser,'create').mockImplementation(()=>{return user});
-      const spyhash = jest.spyOn(user,'hashPassword').mockImplementation(()=>{return Promise.resolve()});
-      const spysave = jest.spyOn(repoUser,'save').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyfindOneByEmail = jest
+        .spyOn(service, 'findOneByEmail')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
+      const spycreate = jest
+        .spyOn(repoUser, 'create')
+        .mockImplementation(() => {
+          return user;
+        });
+      const spyhash = jest
+        .spyOn(user, 'hashPassword')
+        .mockImplementation(() => {
+          return Promise.resolve();
+        });
+      const spysave = jest.spyOn(repoUser, 'save').mockImplementation(() => {
+        return Promise.resolve(user);
+      });
       //outputs
       const expected = 'Password successfully reset!';
       //excecute
@@ -330,7 +416,4 @@ describe('UsersService', () => {
       expect(spysave).toHaveBeenCalled();
     });
   });
-
-  
-
 });

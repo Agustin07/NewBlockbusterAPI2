@@ -85,7 +85,6 @@ export class UpdatePasswordDto {
   new: string;
 }
 
-
 export class resetPasswordDto {
   @IsDefined()
   @IsNotEmpty()

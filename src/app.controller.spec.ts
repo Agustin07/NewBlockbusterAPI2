@@ -7,16 +7,16 @@ import UsersService from './users/users.service';
 import { resetPasswordDto, newPasswordDto } from './users/dto/user.dto';
 
 const FakeUsersService = {
-  resetPassword:jest.fn(),
-}
+  resetPassword: jest.fn(),
+};
 
 const FakeAuthService = {
   login: jest.fn((user) => {
     return { access_token: 'givin a token 🛂' };
   }),
-  resetPassword:jest.fn(),
-  verifyToken:jest.fn(),
-}
+  resetPassword: jest.fn(),
+  verifyToken: jest.fn(),
+};
 
 describe('AppController', () => {
   let appController: AppController;
@@ -30,12 +30,12 @@ describe('AppController', () => {
         AppService,
         {
           provide: AuthService,
-          useValue:FakeAuthService
+          useValue: FakeAuthService,
         },
         {
-          provide:UsersService,
-          useValue:FakeUsersService
-        }
+          provide: UsersService,
+          useValue: FakeUsersService,
+        },
       ],
     }).compile();
 
@@ -62,9 +62,13 @@ describe('AppController', () => {
   describe('resetPassword', () => {
     it('should return message "mail sent" ', async () => {
       //inputs
-      const reset: resetPasswordDto = {email: 'rigoomartinez@gmail.com'}
+      const reset: resetPasswordDto = { email: 'rigoomartinez@gmail.com' };
       //mocks implementations
-      const spyReset = jest.spyOn(authService, 'resetPassword').mockImplementation(()=>{return Promise.resolve('mail sent')});
+      const spyReset = jest
+        .spyOn(authService, 'resetPassword')
+        .mockImplementation(() => {
+          return Promise.resolve('mail sent');
+        });
       //outputs
       const expected = 'mail sent';
       //excecute
@@ -75,13 +79,19 @@ describe('AppController', () => {
     });
   });
 
-
   describe('verifyReset', () => {
     it('should return message `Valid token, now you can send the new password!` ', async () => {
       //inputs
       const keyword = 'k12345';
       //mocks implementations
-      const spyVerify = jest.spyOn(authService, 'verifyToken').mockImplementation(()=>{return Promise.resolve({message: `Valid token, now you can send the new password!`, email: 'rigoomartinez@gmail.com' })});
+      const spyVerify = jest
+        .spyOn(authService, 'verifyToken')
+        .mockImplementation(() => {
+          return Promise.resolve({
+            message: `Valid token, now you can send the new password!`,
+            email: 'rigoomartinez@gmail.com',
+          });
+        });
       //outputs
       const expected = `Valid token, now you can send the new password!`;
       //excecute
@@ -92,19 +102,29 @@ describe('AppController', () => {
     });
   });
 
-
   describe('doReset', () => {
     it('should return message `Valid token, now you can send the new password!` ', async () => {
       //inputs
       const keyword = 'k12345';
-      const newpassword : newPasswordDto = { password: 'squirtle'}
+      const newpassword: newPasswordDto = { password: 'squirtle' };
       //mocks implementations
-      const spyVerify = jest.spyOn(authService, 'verifyToken').mockImplementation(()=>{return Promise.resolve({message: `Valid token, now you can send the new password!`, email: 'rigoomartinez@gmail.com' })});
-      const spyResetPassword = jest.spyOn(userService, 'resetPassword').mockImplementation(()=>{return Promise.resolve('Password successfully reset!')});
+      const spyVerify = jest
+        .spyOn(authService, 'verifyToken')
+        .mockImplementation(() => {
+          return Promise.resolve({
+            message: `Valid token, now you can send the new password!`,
+            email: 'rigoomartinez@gmail.com',
+          });
+        });
+      const spyResetPassword = jest
+        .spyOn(userService, 'resetPassword')
+        .mockImplementation(() => {
+          return Promise.resolve('Password successfully reset!');
+        });
       //outputs
       const expected = 'Password successfully reset!';
       //excecute
-      const res = await appController.doReset(keyword,newpassword);
+      const res = await appController.doReset(keyword, newpassword);
       //validation
       expect(res).toEqual(expected);
       expect(spyVerify).toHaveBeenCalled();

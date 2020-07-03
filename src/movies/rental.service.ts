@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { Movie } from './entities/movie.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -45,7 +49,7 @@ export class RentalService {
   }
 
   async updateReturned(rental: Rental) {
-    const updatedRental =this.repoRentals.create({
+    const updatedRental = this.repoRentals.create({
       ...rental,
       returned: true,
     });
@@ -63,12 +67,11 @@ export class RentalService {
   }
 
   async createRent(movies: Movie | Movie[], user: User) {
-    if(!Array.isArray(movies)) return await this.saveOne(movies,user);
-    
-    movies.forEach( (movie) => {
+    if (!Array.isArray(movies)) return await this.saveOne(movies, user);
+
+    movies.forEach((movie) => {
       return this.saveOne(movie, user);
     });
     return true;
   }
-
 }

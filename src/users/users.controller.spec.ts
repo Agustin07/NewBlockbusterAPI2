@@ -1,6 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
-import { UserDto, CreateUserDto, AssignRoleDto, UpdatePasswordDto, AuthedUserDto } from './dto/user.dto';
+import {
+  UserDto,
+  CreateUserDto,
+  AssignRoleDto,
+  UpdatePasswordDto,
+  AuthedUserDto,
+} from './dto/user.dto';
 import { Role } from './entities/role.entity';
 import UsersService from './users.service';
 import { userDto2, user1, authUser, updteUserDto } from './mocks/users.mocks';
@@ -137,10 +143,17 @@ describe('Users Controller', () => {
   describe('assignRole', () => {
     it('should return user', async () => {
       //inputs
-      const data : AssignRoleDto = {email:'rigoomartinez@gmail.com', name:'agusxx'};
+      const data: AssignRoleDto = {
+        email: 'rigoomartinez@gmail.com',
+        name: 'agusxx',
+      };
       const user = user1;
       //mocks implementations
-      const spyAssignRole = jest.spyOn(service,'assignRole').mockImplementation(()=>{return Promise.resolve(user)});
+      const spyAssignRole = jest
+        .spyOn(service, 'assignRole')
+        .mockImplementation(() => {
+          return Promise.resolve(user);
+        });
       //outputs
       const expected = user;
       //excecute
@@ -151,15 +164,21 @@ describe('Users Controller', () => {
     });
   });
 
-
   describe('changePassword', () => {
     it('should return message ', async () => {
       //inputs
       const id = 1;
-      const password : UpdatePasswordDto = {old:'oldPassword', new:'newPassword'};
-      const user: AuthedUserDto = {id:1, role: 'CLIENT'};
+      const password: UpdatePasswordDto = {
+        old: 'oldPassword',
+        new: 'newPassword',
+      };
+      const user: AuthedUserDto = { id: 1, role: 'CLIENT' };
       //mocks implementations
-      const spyChangePassword = jest.spyOn(service,'changePassword').mockImplementation(()=>{return Promise.resolve('Password changed successfully!')});
+      const spyChangePassword = jest
+        .spyOn(service, 'changePassword')
+        .mockImplementation(() => {
+          return Promise.resolve('Password changed successfully!');
+        });
       //outputs
       const expected = 'Password changed successfully!';
       //excecute
@@ -172,8 +191,11 @@ describe('Users Controller', () => {
     it('should throw BadRequestException ', async () => {
       //inputs
       const id = 2;
-      const password : UpdatePasswordDto = {old:'oldPassword', new:'newPassword'};
-      const user: AuthedUserDto = {id:1, role: 'CLIENT'};
+      const password: UpdatePasswordDto = {
+        old: 'oldPassword',
+        new: 'newPassword',
+      };
+      const user: AuthedUserDto = { id: 1, role: 'CLIENT' };
       //mocks implementations
       //const spyChangePassword = jest.spyOn(service,'changePassword').mockImplementation(()=>{return Promise.resolve('Password changed successfully!')});
       //outputs
@@ -181,7 +203,7 @@ describe('Users Controller', () => {
       //excecute
       try {
         const res = await controller.changePassword(id, password, user);
-      } catch(e) {
+      } catch (e) {
         //validation
         expect(e).toBeInstanceOf(expected);
       }

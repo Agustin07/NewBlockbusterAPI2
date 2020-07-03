@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    image: agusxx/blockbuster-api-nestjs
+    depends_on:
+      - postgres
+    links:
+      - postgres:postgres
+    command: npm run start:dev
+
+  postgres:
+    image: postgres:9.5-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_PASSWORD: "postgres"

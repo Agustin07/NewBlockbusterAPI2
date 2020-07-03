@@ -32,7 +32,12 @@ describe('Movies Controller', () => {
   describe('getMovies', () => {
     it('should return an array of movies ', async () => {
       const result = [movie1, movie2];
-      const query = { sortedBy:'title', availability:'true', tags:'COMEDY',title:'' }
+      const query = {
+        sortedBy: 'title',
+        availability: 'true',
+        tags: 'COMEDY',
+        title: '',
+      };
       const spygetMovies = jest
         .spyOn(moviesService, 'getMovies')
         .mockImplementation(() => Promise.resolve(result));
@@ -112,14 +117,18 @@ describe('Movies Controller', () => {
     });
   });
 
-  describe('getRentedMovies',()=>{
+  describe('getRentedMovies', () => {
     it('should return array of movies', async () => {
       //inputs
       const user = authUser;
-      const movies = [movie1,movie2,movie3];
+      const movies = [movie1, movie2, movie3];
 
       //mocks implementations
-      const spyFunction = jest.spyOn(moviesService,'getRentedMovies').mockImplementation(()=>{return Promise.resolve(movies)});
+      const spyFunction = jest
+        .spyOn(moviesService, 'getRentedMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -130,15 +139,18 @@ describe('Movies Controller', () => {
     });
   });
 
-
-  describe('getPurchasedMovies',()=>{
+  describe('getPurchasedMovies', () => {
     it('should return array of movies', async () => {
       //inputs
       const user = authUser;
-      const movies = [movie1,movie2,movie3];
+      const movies = [movie1, movie2, movie3];
 
       //mocks implementations
-      const spyFunction = jest.spyOn(moviesService,'getPurchasedMovies').mockImplementation(()=>{return Promise.resolve(movies)});
+      const spyFunction = jest
+        .spyOn(moviesService, 'getPurchasedMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -149,13 +161,17 @@ describe('Movies Controller', () => {
     });
   });
 
-  describe('returnMovie',()=>{
+  describe('returnMovie', () => {
     it('should return message', async () => {
       //inputs
       const id = movie2.id;
       const user = authUser;
       //mocks implementations
-      const spyFunction = jest.spyOn(moviesService,'returnMovie').mockImplementation(()=>{return Promise.resolve(`"${movie2.title}" have been returned!`)});
+      const spyFunction = jest
+        .spyOn(moviesService, 'returnMovie')
+        .mockImplementation(() => {
+          return Promise.resolve(`"${movie2.title}" have been returned!`);
+        });
       //outputs
       const expected = `"${movie2.title}" have been returned!`;
       //excecute
@@ -166,15 +182,18 @@ describe('Movies Controller', () => {
     });
   });
 
-
-  describe('rentMovie',()=>{
+  describe('rentMovie', () => {
     it('should return rented movies', async () => {
       //inputs
       const list = movie1.id;
       const user = authUser;
       const movies = movie1;
       //mocks implementations
-      const spyFunction = jest.spyOn(moviesService,'rentMovies').mockImplementation(()=>{return Promise.resolve(movies)});
+      const spyFunction = jest
+        .spyOn(moviesService, 'rentMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -185,14 +204,18 @@ describe('Movies Controller', () => {
     });
   });
 
-  describe('buyMovie',()=>{
+  describe('buyMovie', () => {
     it('should return bought movies', async () => {
       //inputs
       const list = [movie1.id, movie2.id];
       const user = authUser;
-      const movies = [movie1,movie2];
+      const movies = [movie1, movie2];
       //mocks implementations
-      const spyFunction = jest.spyOn(moviesService,'rentMovies').mockImplementation(()=>{return Promise.resolve(movies)});
+      const spyFunction = jest
+        .spyOn(moviesService, 'rentMovies')
+        .mockImplementation(() => {
+          return Promise.resolve(movies);
+        });
       //outputs
       const expected = movies;
       //excecute
@@ -202,5 +225,4 @@ describe('Movies Controller', () => {
       expect(spyFunction).toHaveBeenCalled();
     });
   });
-
 });

@@ -14,8 +14,9 @@ import { AppMailerService } from './appmailer.service';
     MailerModule.forRoot({
       transport: 'smtps://lm10001dev@gmail.com:rayohielo@smtp.gmail.com',
       defaults: {
-        from:'"nest-modules" <modules@nestjs.com>',
-      },}),
+        from: '"nest-modules" <modules@nestjs.com>',
+      },
+    }),
     UsersModule,
     AuthModule,
     ConfigModule.forRoot({
@@ -34,7 +35,7 @@ import { AppMailerService } from './appmailer.service';
     MoviesModule,
   ],
   controllers: [AppController],
-  providers: [AppService,AppMailerService],
-  exports:[AppMailerService]
+  providers: [AppService, AppMailerService],
+  exports: [AppMailerService],
 })
 export class AppModule {}
